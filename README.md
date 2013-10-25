@@ -1,7 +1,7 @@
 mp4analyzer.js
 ==============
 
-mp4analyzer.js parses mp4/mov files and extracts information. It uses the HTML5 FileAPI to read files from disk. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
+mp4analyzer.js is a library to parse mp4/mov files and extract information. It uses the HTML5 FileAPI to read files from disk. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
 
 Building
 --------
@@ -25,6 +25,44 @@ make CLOSURE_COMMAND=your_compiler_cmd
 
 Usage
 -----
+
+A trivial example:
+```
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="mp4analyzer.js"></script>
+    <script>
+      function handleFile(files) {
+        if (files[0])
+          MP4.analyze(files[0], function(result) {
+            // do something
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <input type="file" onchange="handleFile(this.files)">
+  </body>
+</html>
+```
+
+
+
+MP4/MOV file format reference
+-----------------------------
+
+[1] QuickTime File Format Specification: https://developer.apple.com/library/mac/documentation/QuickTime/qtff/QTFFPreface/qtffPreface.html
+
+[2] MOV/ISOM demuxer code from FFMPEG:
+
+-  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/mov.c
+-  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/isom.h
+-  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/isom.c
+
+[3] AtomicParsley documentation: http://atomicparsley.sourceforge.net/mpeg-4files.html
+
+[4] MPEG4 Registration Authority: http://www.mp4ra.org
 
 License
 -------
