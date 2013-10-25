@@ -1,7 +1,7 @@
 mp4analyzer.js
 ==============
 
-mp4analyzer.js is a library to parse mp4/mov files and extract information. It uses the HTML5 FileAPI to read files from disk. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
+mp4analyzer.js is a tool for parsing mp4/mov files and extracting information. It uses the HTML5 FileAPI to read files from disk. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
 
 Building
 --------
