@@ -101,9 +101,9 @@ MP4.Atoms.Map['trak'] = {
     context.currentTrack = new MP4.Track();
     MP4.Atoms.visitChildren(atom, blob, context, function(context) {
       if (context.currentTrack.subtype === 'vide' && context.video.codec === null)
-        context.video.codec = context.currentTrack.codec;
+        context.video = context.currentTrack;
       else if (context.currentTrack.subtype === 'soun' && context.audio.codec === null)
-        context.audio.codec = context.currentTrack.codec;
+        context.audio = context.currentTrack;
 
       context.currentTrack = null;
       callback(context);

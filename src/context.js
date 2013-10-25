@@ -19,25 +19,30 @@ MP4.Track = function() {
  */
 MP4.Context = function() {
   /**
-   * Parent atom
+   * Parent atom type
    * @type {?string}
    */
   this.parent = null;
-
-  /** @type {{codec: ?string}} */
-  this.video = /** @struct */ { codec: null };
-  /** @type {{codec: ?string}} */
-  this.audio = /** @struct */ { codec: null };
-
-  /** @type {Array.<MP4.Track>} */
-  this.tracks = [];
   /** @type {?MP4.Track} */
   this.currentTrack = null;
 
+  /** @type {?MP4.Track} */
+  this.video = null;
+  /** @type {?MP4.Track} */
+  this.audio = null;
+
   /**
+   * Extract useful information from context
    * @return Object.<string, *>
    */
   this.result = function() {
-    return { 'video': { 'codec': this.video.codec }, 'audio': { 'codec': this.audio.codec } };
+    return {
+      'video': this.video && {
+        'codec': this.video.codec
+      },
+      'audio': this.audio && {
+        'codec': this.audio.codec
+      }
+    };
   };
 };
