@@ -64,7 +64,7 @@ MP4.supported = true/false;
 A boolean property named ```supported``` is defined in the ```MP4``` namespace.
 It will be set to false when the requested APIs are not supported.
 
-### Invoking the analyzer
+### Running the analyzer
 
 ```
 MP4.analyze = function(  // return type: boolean
@@ -73,8 +73,10 @@ MP4.analyze = function(  // return type: boolean
 );
 ```
 
-To analyze a file you only need to invoke ```MP4.analyze```. The first argument must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object. A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) is thrown when ```blob``` does not inherit the ```Blob``` object.
+To analyze a file you only need to call ```MP4.analyze```. The first argument must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object. A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) exception is thrown when ```blob``` does not inherit the ```Blob``` object and when ```blob.type``` is not 'video/mp4', 'audio/mp4' or 'video/quicktime'.
 The second argument is a completion callback. The analysis process is asynchronous to avoid blocking the browser while waiting for disk I/O. The argument passed to the callback is the result object.
+
+```MP4.analyze``` will return ```false``` and do nothing when ```MP4.supported``` is ```false```; it will return ```true``` otherwise.
 
 ### Reading results
 
