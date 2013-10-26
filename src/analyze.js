@@ -16,4 +16,6 @@ MP4.analyze = function(blob, callback) {
   MP4.Atoms.visitChildren(atom, blob, new MP4.Context(), function(context) {
     callback(context.result());
   });
+
+  return true;
 }

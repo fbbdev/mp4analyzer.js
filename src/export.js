@@ -1,2 +1,2 @@
-  window['MP4'] = { 'analyze': MP4.analyze };
+  window['MP4'] = { 'supported': true, 'analyze': MP4.analyze };
 }
