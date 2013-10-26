@@ -1,13 +1,12 @@
 mp4analyzer.js
 ==============
 
-mp4analyzer.js is a tool for parsing mp4/mov files and extracting information. It uses the HTML5 FileAPI to read files from disk. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
+mp4analyzer.js is a tool for parsing mp4/mov files and extracting information. It uses HTML5 [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) and [DataView](https://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs to read local files. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
 
 Building
 --------
 
-mp4analyzer.js has been designed to be minified and optimized with [Google Closure Compiler](https://developers.google.com/closure/compiler/).
-The included makefile helps in the building process. It has four targets:
+mp4analyzer.js has been designed to be minified and optimized with [Google Closure Compiler](https://developers.google.com/closure/compiler/). The included makefile helps in the building process. It contains four targets:
 
 * __wrap__: wrap the library in a single uncompressed file (output: build/mp4analyzer.js)
 * __minify__: minify the library with Closure compiler (output: build/mp4analyzer.min.js)
@@ -26,13 +25,17 @@ make CLOSURE_COMMAND=your_compiler_cmd
 Usage
 -----
 
-A trivial example:
+Here is a trivial example:
 ```
 <!DOCTYPE html>
 <html>
   <head>
     <script src="mp4analyzer.js"></script>
     <script>
+      if (!MP4.supported) {
+        // mp4analyzer is not supported by this browser (FileReader or DataView API not supported)
+      }
+
       function handleFile(files) {
         if (files[0])
           MP4.analyze(files[0], function(result) {
@@ -47,22 +50,58 @@ A trivial example:
 </html>
 ```
 
+The ```MP4.analyze``` function takes as arguments an HTML5 [File](https://developer.mozilla.org/en-US/docs/Web/API/File) or [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) and a callback. The analysis process is asynchronous. The callback is called on completion with the result object as first argument.
 
+### Result object structure
+```
+result = {
+  video: { // null if no video stream found
+    codec: 'codec name'
+  },
+  audio: { // null if no audio stream found
+    codec: 'codec name'
+  }
+}
+```
+
+### MP4 namespace
+
+* MP4.analyze
+```
+MP4.analyze = function(  // return type: boolean
+    blob,                // type: Blob
+    callback             // type: function(result)
+);
+```
+* MP4.supported
+```
+MP4.supported = true;   // true if the browser supports mp4analyzer,
+MP4.supported = false;  // false otherwise
+```
+
+Browser support
+---------------
+
+Firefox 15, Chrome 9, Internet Explorer 10, Opera 12.1, Safari 6.0.2
+
+Detail:
+
+* FileReader: http://caniuse.com/filereader
+* DataView: http://caniuse.com/typedarrays
 
 MP4/MOV file format reference
 -----------------------------
 
-[1] QuickTime File Format Specification: https://developer.apple.com/library/mac/documentation/QuickTime/qtff/QTFFPreface/qtffPreface.html
+1. QuickTime File Format Specification: https://developer.apple.com/library/mac/documentation/QuickTime/qtff/QTFFPreface/qtffPreface.html
 
-[2] MOV/ISOM demuxer code from FFMPEG:
+2. MOV/ISOM demuxer code from FFMPEG:
+  -  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/mov.c
+  -  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/isom.h
+  -  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/isom.c
 
--  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/mov.c
--  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/isom.h
--  http://git.videolan.org/?p=ffmpeg.git;a=blob;f=libavformat/isom.c
+3. AtomicParsley documentation: http://atomicparsley.sourceforge.net/mpeg-4files.html
 
-[3] AtomicParsley documentation: http://atomicparsley.sourceforge.net/mpeg-4files.html
-
-[4] MPEG4 Registration Authority: http://www.mp4ra.org
+4. MPEG4 Registration Authority: http://www.mp4ra.org
 
 License
 -------
