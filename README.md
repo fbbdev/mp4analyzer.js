@@ -1,24 +1,34 @@
 mp4analyzer.js
 ==============
 
-mp4analyzer.js is a tool for parsing mp4/mov files and extracting information. It uses HTML5 [FileReader](http://developer.mozilla.org/en-US/docs/Web/API/FileReader) and [DataView](http://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs to read local files. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
+mp4analyzer.js is a tool for parsing mp4/mov files and extracting information.
+It uses HTML5 [FileReader](http://developer.mozilla.org/en-US/docs/Web/API/FileReader) and
+[DataView](http://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs to read local files.
+Currently it only returns the codec of the first video and audio streams, but it can be extended
+to extract anything contained in mp4 atoms.
 
 Building
 --------
 
-mp4analyzer.js has been designed to be minified and optimized with [Google Closure Compiler](https://developers.google.com/closure/compiler/). The included makefile helps in the building process. It contains four targets:
+mp4analyzer.js has been designed to be minified and optimized with
+[Google Closure Compiler](https://developers.google.com/closure/compiler/). The included makefile
+helps in the building process. It contains four targets:
 
 * __wrap__: wrap the library in a single uncompressed file (output: build/mp4analyzer.js)
 * __minify__: minify the library with Closure compiler (output: build/mp4analyzer.min.js)
-* __optimize__: minify the library with Closure Compiler in advanced mode (output: build/mp4analyzer.opt.js); this is the best choice and should be preferred. Closure Compiler removes dead code and produces code which is easier to optimize for modern JavaScript engines.
+* __optimize__: minify the library with Closure Compiler's
+[advanced mode](https://developers.google.com/closure/compiler/docs/api-tutorial3) (output: build/mp4analyzer.opt.js)
 * __all (default):__ build plain, minified and optimized versions of the library
 
-To use Closure Compiler you make tell make where the Closure Compiler's jar file is located:
-```
+To use Closure Compiler you must tell make where the Closure Compiler's jar file is located:
+
+```sh
 make CLOSURE_COMPILER=/path/to/compiler.jar
 ```
-Make will invoke ```java -jar /path/to/compiler.jar```. Alternatively you can override the full command:
-```
+
+Make will invoke ```java -jar /path/to/compiler.jar```. You can also override the full command:
+
+```sh
 make CLOSURE_COMMAND=your_compiler_cmd
 ```
 
@@ -27,7 +37,7 @@ Usage
 
 ### A trivial example
 
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -53,34 +63,42 @@ Usage
 
 ### Namespace
 
-mp4analyzer.js exports a global object named ```MP4```. This namespace contains all methods and properties defined by the library.
+mp4analyzer.js exports a global object named ```MP4```. This namespace contains all methods and
+properties defined by the library.
 
 ### Checking for browser support
 
-```
+```js
 MP4.supported = true/false;
 ```
 
 A boolean property named ```supported``` is defined in the ```MP4``` namespace.
-It will be set to false when the requested APIs are not supported.
+It is set to false if the requested APIs are not supported.
 
 ### Running the analyzer
 
-```
+```js
 MP4.analyze = function(  // return type: boolean
     blob,                // type: Blob
     callback             // type: function(result)
 );
 ```
 
-To analyze a file you only need to call ```MP4.analyze```. The first argument must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object. A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) exception is thrown when ```blob``` does not inherit the ```Blob``` object and when ```blob.type``` is not 'video/mp4', 'audio/mp4' or 'video/quicktime'.
-The second argument is a completion callback. The analysis process is asynchronous to avoid blocking the browser while waiting for disk I/O. The argument passed to the callback is the result object.
+To analyze a file you only need to call ```MP4.analyze```. The first argument must be a HTML5
+[File](http://developer.mozilla.org/en-US/docs/Web/API/File) or
+[Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object.
+A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) exception
+is thrown when ```blob``` does not inherit the ```Blob``` object and when ```blob.type``` is not 'video/mp4',
+'audio/mp4' or 'video/quicktime'.
+The second argument is a completion callback. The analysis process is asynchronous to avoid blocking the browser
+while waiting for disk I/O. The argument passed to the callback is the result object.
 
-```MP4.analyze``` will return ```false``` and do nothing when ```MP4.supported``` is ```false```; it will return ```true``` otherwise.
+```MP4.analyze``` will return ```false``` and do nothing when ```MP4.supported``` is ```false```;
+it will return ```true``` otherwise.
 
 ### Reading results
 
-```
+```js
 {
   video: { // null if no video stream found
     codec: 'codec name'
@@ -91,7 +109,9 @@ The second argument is a completion callback. The analysis process is asynchrono
 };
 ```
 
-This is the structure of the result object passed to the callback. As stated above, the analyzer currently extracts only the codec name for the first video and audio streams. If no video or audio stream is found the concerning field in the result object is set to ```null```.
+This is the structure of the result object passed to the callback. As stated above, the analyzer
+currently extracts only the codec name for the first video and audio streams. If no video or audio stream
+is found, the concerning field in the result object is set to ```null```.
 
 ```result.video.codec``` contains a FOURCC code. You can find a FOURCC list [there](http://www.fourcc.org/codecs.php).
 ```result.audio.codec``` containes one of these strings:
@@ -106,7 +126,7 @@ This is the structure of the result object passed to the callback. As stated abo
 Browser support
 ---------------
 
-Firefox 15, Chrome 9, Internet Explorer 10, Opera 12.1, Safari 6.0.2
+Firefox >= 15, Chrome >= 9, Internet Explorer >= 10, Opera >= 12.1, Safari >= 6.0.2
 
 Detail:
 
