@@ -28,7 +28,7 @@ optimize : build/mp4analyzer.opt.js
 
 all : wrap minify optimize
 
-rebuild : clean
+rebuild : clean all
 
 clean:
-	rm -rf build/mp4analyzer.unwrapped.js build/mp4analyzer.js build/mp4analyzer.min.js build/mp4analyzer.opt.js
+	rm -f build/mp4analyzer.unwrapped.js build/mp4analyzer.js build/mp4analyzer.min.js build/mp4analyzer.opt.js
