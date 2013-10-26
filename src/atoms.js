@@ -100,9 +100,9 @@ MP4.Atoms.Map['trak'] = {
   visitor: function(atom, blob, context, callback) {
     context.currentTrack = new MP4.Track();
     MP4.Atoms.visitChildren(atom, blob, context, function(context) {
-      if (context.currentTrack.subtype === 'vide' && context.video.codec === null)
+      if (context.currentTrack.subtype === 'vide' && context.video === null)
         context.video = context.currentTrack;
-      else if (context.currentTrack.subtype === 'soun' && context.audio.codec === null)
+      else if (context.currentTrack.subtype === 'soun' && context.audio === null)
         context.audio = context.currentTrack;
 
       context.currentTrack = null;
@@ -153,7 +153,10 @@ MP4.Atoms.Map['stsd'] = {
 
 /** @type {{visitor: function(MP4.Atoms.Atom, Blob, MP4.Context, function(MP4.Context)), parsedSize: number, parser: (undefined|function(MP4.Context, DataView, number=) : MP4.Atoms.Atom)}} */
 MP4.Atoms.Map['mp4a'] = {
-  visitor: MP4.Atoms.visitor,
+  visitor: function(atom, blob, context, callback) {
+    if (context.parent === 'stsd') MP4.Atoms.visitor(atom, blob, context, callback);
+    else callback(context);
+  },
   parsedSize: MP4.Atoms.Atom.HeaderSize + 10, // [header (8 bytes)]+[reserved (8 bytes)]+[version (2 bytes)]
   parser: function(context, data, offset) {
     return new MP4.Atoms.MP4AMediaData(data, offset);
@@ -165,11 +168,8 @@ MP4.Atoms.Map['wave'] = { visitor: MP4.Atoms.visitor, parsedSize: MP4.Atoms.Atom
 
 /** @type {{visitor: function(MP4.Atoms.Atom, Blob, MP4.Context, function(MP4.Context)), parsedSize: number, parser: (undefined|function(MP4.Context, DataView, number=) : MP4.Atoms.Atom)}} */
 MP4.Atoms.Map['esds'] = {
-  visitor: function(atom, blob, context, callback) {
-    MP4.Atoms.Map['esds'].parsedSize = atom.size;
-    MP4.Atoms.visitor(atom, blob, context, callback);
-  },
-  parsedSize: 0,
+  visitor: MP4.Atoms.visitor,
+  parsedSize: -1,
   parser: function(context, data, offset) {
     var atom = new MP4.Atoms.ESDescriptor(data, offset);
     if (atom.objectType !== null) context.currentTrack.codec = MP4.Tags.ObjectTypes[atom.objectType];
