@@ -1,6 +1,6 @@
 MP4.analyze = function(blob, callback) {
   if (!(blob instanceof Blob)) throw new TypeError("Invalid argument type");
-  if (blob.type != "video/mp4" && blob.type != "video/quicktime") {
+  if (blob.type != "video/mp4" && blob.type != "video/quicktime" && blob.type != "audio/mp4") {
     throw new TypeError("Input data format is not mp4/mov");
   }
 
