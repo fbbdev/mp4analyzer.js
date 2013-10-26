@@ -1,7 +1,7 @@
 mp4analyzer.js
 ==============
 
-mp4analyzer.js is a tool for parsing mp4/mov files and extracting information. It uses HTML5 [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) and [DataView](https://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs to read local files. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
+mp4analyzer.js is a tool for parsing mp4/mov files and extracting information. It uses HTML5 [FileReader](http://developer.mozilla.org/en-US/docs/Web/API/FileReader) and [DataView](http://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs to read local files. Currently it only returns the codec of the first video and audio streams, but it can be extended to extract anything contained in mp4 atoms.
 
 Building
 --------
@@ -13,11 +13,11 @@ mp4analyzer.js has been designed to be minified and optimized with [Google Closu
 * __optimize__: minify the library with Closure Compiler in advanced mode (output: build/mp4analyzer.opt.js); this is the best choice and should be preferred. Closure Compiler removes dead code and produces code which is easier to optimize for modern JavaScript engines.
 * __all (default):__ build plain, minified and optimized versions of the library
 
-To use Closure Compiler you need to tell make the compiler JAR location:
+To use Closure Compiler you make tell make where the Closure Compiler's jar file is located:
 ```
 make CLOSURE_COMPILER=/path/to/compiler.jar
 ```
-Alternatively you can fully replace the compiler command:
+Make will invoke ```java -jar /path/to/compiler.jar```. Alternatively you can override the full command:
 ```
 make CLOSURE_COMMAND=your_compiler_cmd
 ```
@@ -25,7 +25,8 @@ make CLOSURE_COMMAND=your_compiler_cmd
 Usage
 -----
 
-Here is a trivial example:
+### A trivial example
+
 ```
 <!DOCTYPE html>
 <html>
@@ -50,34 +51,55 @@ Here is a trivial example:
 </html>
 ```
 
-The ```MP4.analyze``` function takes as arguments an HTML5 [File](https://developer.mozilla.org/en-US/docs/Web/API/File) or [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) and a callback. The analysis process is asynchronous. The callback is called on completion with the result object as first argument.
+### Namespace
 
-### Result object structure
+mp4analyzer.js exports a global object named ```MP4```. This namespace contains all methods and properties defined by the library.
+
+### Checking for browser support
+
 ```
-result = {
-  video: { // null if no video stream found
-    codec: 'codec name'
-  },
-  audio: { // null if no audio stream found
-    codec: 'codec name'
-  }
-}
+MP4.supported = true/false;
 ```
 
-### MP4 namespace
+A boolean property named ```supported``` is defined in the ```MP4``` namespace.
+It will be set to false when the requested APIs are not supported.
 
-* MP4.analyze
+### Invoking the analyzer
+
 ```
 MP4.analyze = function(  // return type: boolean
     blob,                // type: Blob
     callback             // type: function(result)
 );
 ```
-* MP4.supported
+
+To analyze a file you only need to invoke ```MP4.analyze```. The first argument must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object. A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) is thrown when ```blob``` does not inherit the ```Blob``` object.
+The second argument is a completion callback. The analysis process is asynchronous to avoid blocking the browser while waiting for disk I/O. The argument passed to the callback is the result object.
+
+### Reading results
+
 ```
-MP4.supported = true;   // true if the browser supports mp4analyzer,
-MP4.supported = false;  // false otherwise
+{
+  video: { // null if no video stream found
+    codec: 'codec name'
+  },
+  audio: { // null if no audio stream found
+    codec: 'codec name'
+  }
+};
 ```
+
+This is the structure of the result object passed to the callback. As stated above, the analyzer currently extracts only the codec name for the first video and audio streams. If no video or audio stream is found the concerning field in the result object is set to ```null```.
+
+```result.video.codec``` contains a FOURCC code. You can find a FOURCC list [there](http://www.fourcc.org/codecs.php).
+```result.audio.codec``` containes one of these strings:
+
+* '.mp3': MPEG-1 Layer 3 (MP3)
+* 'aac': MPEG-4 Advanced Audio Coding (AAC)
+* 'ac-3': Digital Audio Compression Standard (AC-3, Enhanced AC-3)
+* 'vorbis': OGG Vorbis
+* 'dvca': DV Audio
+* [Infrequent values](https://developer.apple.com/library/mac/documentation/quicktime/qtff/QTFFChap3/qtff3.html#//apple_ref/doc/uid/TP40000939-CH205-75770)
 
 Browser support
 ---------------
@@ -89,8 +111,8 @@ Detail:
 * FileReader: http://caniuse.com/filereader
 * DataView: http://caniuse.com/typedarrays
 
-MP4/MOV file format reference
------------------------------
+MP4/MOV file format documentation
+---------------------------------
 
 1. QuickTime File Format Specification: https://developer.apple.com/library/mac/documentation/QuickTime/qtff/QTFFPreface/qtffPreface.html
 
@@ -102,6 +124,8 @@ MP4/MOV file format reference
 3. AtomicParsley documentation: http://atomicparsley.sourceforge.net/mpeg-4files.html
 
 4. MPEG4 Registration Authority: http://www.mp4ra.org
+
+5. Fourcc codes of video codecs: http://www.fourcc.org/codecs.php
 
 License
 -------
