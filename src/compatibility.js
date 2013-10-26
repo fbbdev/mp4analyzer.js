@@ -50,5 +50,5 @@ function checkDataViewAPI() {
 MP4.Compatibility = { FileAPI: checkFileAPI, DataViewAPI: checkDataViewAPI };
 
 if (!MP4.Compatibility.FileAPI() || !MP4.Compatibility.DataViewAPI()) {
-  window['MP4'] = { 'supported': false, 'analyze': function() { return false; }
+  window['MP4'] = { 'supported': false, 'analyze': function() { return false; } };
 } else {
