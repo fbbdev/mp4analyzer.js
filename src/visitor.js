@@ -71,7 +71,8 @@ MP4.Atoms.visitor = function(atom, blob, context, callback) {
           }
         };
 
-        reader.readAsArrayBuffer(blob.poll(MP4.Atoms.Map[atom.type].parsedSize));
+        var parsedSize = MP4.Atoms.Map[atom.type].parsedSize == -1 ? atom.size : MP4.Atoms.Map[atom.type].parsedSize;
+        reader.readAsArrayBuffer(blob.poll(parsedSize));
       } else {
         atom.dataSize = MP4.Atoms.Map[atom.type].parsedSize-atom.headerSize;
         MP4.Atoms.visitChildren(atom, blob, context, callback);
