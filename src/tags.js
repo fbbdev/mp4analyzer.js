@@ -10,8 +10,8 @@ MP4.Tags.ObjectTypes = /** @dict */ {
   0x66: "aac",
   0x67: "aac",
   0x68: "aac",
-  0x69: "mp3",
-  0x6b: "mp3",
+  0x69: ".mp3",
+  0x6b: ".mp3",
   0xa5: "ac3",
   0xa9: "dts",
   0xdd: "vorbis"
