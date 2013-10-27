@@ -19,9 +19,7 @@
         $('#type').text(file.type);
         $('#size').text(file.size);
 
-        console.time("analyzer");
         MP4.analyze(file, function(info) {
-          console.timeEnd("analyzer");
           if (info.video) $('#vcodec').text(info.video.codec);
           if (info.audio) $('#acodec').text(info.audio.codec);
         });
@@ -42,13 +40,12 @@
         font-family: Open Sans, Helvetica, sans-serif;
       }
 
-      a.btn:link, a.btn:active, a.btn:visited {
-        color: #000;
-        text-decoration: none;
+      a:link, a:active, a:visited {
+        color: #a00;
       }
 
-      a.btn:hover {
-        color: #a00;
+      a:hover {
+        color: #f00;
       }
     </style>
   </head>
