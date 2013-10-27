@@ -3,30 +3,34 @@ mp4analyzer.js
 
 mp4analyzer.js is a tool for parsing mp4/mov files and extracting information.
 It uses HTML5 [FileReader](http://developer.mozilla.org/en-US/docs/Web/API/FileReader) and
-[DataView](http://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs to read local files.
-Currently it only returns the codec of the first video and audio streams, but it can be extended
-to extract anything contained in mp4 atoms.
+[DataView](http://developer.mozilla.org/en-US/docs/Web/API/DataView) APIs
+to read local files. Currently it only returns the codec of the first
+video and audio streams, but it can be extended to extract anything
+contained in mp4 atoms.
+
+Demo: http://fbbdev.github.io/mp4analyzer.js/
 
 Building
 --------
 
 mp4analyzer.js has been designed to be minified and optimized with
-[Google Closure Compiler](https://developers.google.com/closure/compiler/). The included makefile
-helps in the building process. It contains four targets:
+[Google Closure Compiler](https://developers.google.com/closure/compiler/).
+The included makefile helps in the building process. It contains four targets:
 
 * __wrap__: wrap the library in a single uncompressed file (output: build/mp4analyzer.js)
 * __minify__: minify the library with Closure compiler (output: build/mp4analyzer.min.js)
-* __optimize__: minify the library with Closure Compiler's
-[advanced mode](https://developers.google.com/closure/compiler/docs/api-tutorial3) (output: build/mp4analyzer.opt.js)
+* __optimize__: minify the library with Closure Compiler's [advanced mode](https://developers.google.com/closure/compiler/docs/api-tutorial3) (output: build/mp4analyzer.opt.js)
 * __all (default):__ build plain, minified and optimized versions of the library
 
-To use Closure Compiler you must tell make where the Closure Compiler's jar file is located:
+To use Closure Compiler you must tell make where the Closure Compiler's
+jar file is located:
 
 ```sh
 make CLOSURE_COMPILER=/path/to/compiler.jar
 ```
 
-Make will invoke ```java -jar /path/to/compiler.jar```. You can also override the full command:
+Make will invoke ```java -jar /path/to/compiler.jar```. You can also
+override the full command:
 
 ```sh
 make CLOSURE_COMMAND=your_compiler_cmd
@@ -44,7 +48,8 @@ Usage
     <script src="mp4analyzer.js"></script>
     <script>
       if (!MP4.supported) {
-        // mp4analyzer is not supported by this browser (FileReader or DataView API not supported)
+        // mp4analyzer is not supported by this browser
+        // (FileReader or DataView API not supported)
       }
 
       function handleFile(files) {
@@ -63,8 +68,8 @@ Usage
 
 ### Namespace
 
-mp4analyzer.js exports a global object named ```MP4```. This namespace contains all methods and
-properties defined by the library.
+mp4analyzer.js exports a global object named ```MP4```. This namespace
+contains all methods and properties defined by the library.
 
 ### Checking for browser support
 
@@ -84,17 +89,18 @@ MP4.analyze = function(  // return type: boolean
 );
 ```
 
-To analyze a file you only need to call ```MP4.analyze```. The first argument must be a HTML5
-[File](http://developer.mozilla.org/en-US/docs/Web/API/File) or
+To analyze a file you only need to call ```MP4.analyze```. The first argument
+must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or
 [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object.
-A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) exception
-is thrown when ```blob``` does not inherit the ```Blob``` object and when ```blob.type``` is not 'video/mp4',
-'audio/mp4' or 'video/quicktime'.
-The second argument is a completion callback. The analysis process is asynchronous to avoid blocking the browser
-while waiting for disk I/O. The argument passed to the callback is the result object.
+A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)
+exception is thrown when ```blob``` does not inherit the ```Blob``` object
+and when ```blob.type``` is not 'video/mp4', 'audio/mp4' or 'video/quicktime'.
+The second argument is a completion callback. The analysis process is
+asynchronous to avoid blocking the browser while waiting for disk I/O.
+The argument passed to the callback is the result object.
 
-```MP4.analyze``` will return ```false``` and do nothing when ```MP4.supported``` is ```false```;
-it will return ```true``` otherwise.
+```MP4.analyze``` will return ```false``` and do nothing when
+```MP4.supported``` is ```false```; it will return ```true``` otherwise.
 
 ### Reading results
 
@@ -109,12 +115,14 @@ it will return ```true``` otherwise.
 };
 ```
 
-This is the structure of the result object passed to the callback. As stated above, the analyzer
-currently extracts only the codec name for the first video and audio streams. If no video or audio stream
-is found, the concerning field in the result object is set to ```null```.
+This is the structure of the result object passed to the callback.
+As stated above, the analyzer currently extracts only the codec name
+for the first video and audio streams. If no video or audio stream is found,
+the concerning field in the result object is set to ```null```.
 
-```result.video.codec``` contains a FOURCC code. You can find a FOURCC list [there](http://www.fourcc.org/codecs.php).
-```result.audio.codec``` containes one of these strings:
+```result.video.codec``` contains a FOURCC code. You can find a FOURCC list
+[there](http://www.fourcc.org/codecs.php).
+```result.audio.codec``` contains one of these strings:
 
 * '.mp3': MPEG-1 Layer 3 (MP3)
 * 'aac': MPEG-4 Advanced Audio Coding (AAC)
@@ -126,7 +134,8 @@ is found, the concerning field in the result object is set to ```null```.
 Browser support
 ---------------
 
-Firefox >= 15, Chrome >= 9, Internet Explorer >= 10, Opera >= 12.1, Safari >= 6.0.2
+Firefox >= 15, Chrome >= 9, Internet Explorer >= 10, Opera >= 12.1,
+Safari >= 6.0.2
 
 Detail:
 
