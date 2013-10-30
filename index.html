@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <title>mp4analyzer.js</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,user-scalable=no">
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script type="text/javascript" src="js/mp4analyzer.opt.js"></script>
-    <script type="text/javascript">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="js/mp4analyzer.opt.js"></script>
+    <script>
       function handleFile(files) {
-        if (!MP4.supported) return;
+        if (!MP4.supported || !files || !files.length) return;
 
         var file = files[0];
         if (file.rewind) file.rewind();
@@ -26,56 +27,139 @@
       }
 
       $(document).ready(function() {
-        
         if (!MP4.supported) {
-          $('#selector, #info').remove();
-          $('#demo').append('<div class="error">mp4analyzer.js is not supported in your browser</div>');
+          $('#demo section .error').text('Your browser does not support mp4analyzer.js');
+        } else {
+          $('#demo section').append($('script#demo-html').remove().html()).children('.error').remove();
+
+          $('#demo #btn-movie-selector').click(function(ev) {
+            ev.preventDefault();
+            $('#movie-selector').click();
+          });
+
+          $('#demo #movie-selector').change(function() {
+            handleFile(this.files);
+          });
+
+          $('#demo #movie-dropper').on('drop', function(ev) {
+            handleFile(ev.originalEvent.dataTransfer.files);
+          });
         }
+
+        $(document).on('dragover', '.dropslot', function(ev) {
+            ev.preventDefault();
+        }).on('dragenter dragleave', '.dropslot', function(ev) {
+            $(ev.target).toggleClass('active');
+        }).on('drop', '.dropslot', function(ev) {
+            ev.preventDefault();
+            $(ev.target).removeClass('active');
+        });
       });
     </script>
 
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
-    <style>
-      body {
-        font-family: Open Sans, Helvetica, sans-serif;
-      }
-
-      a:link, a:active, a:visited {
-        color: #a00;
-      }
-
-      a:hover {
-        color: #f00;
-      }
-    </style>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700,300|Raleway:100,200,300">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/screen.css">
+    <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
-    <h1>mp4analyzer.js</h1>
-    JavaScript MP4/M4A/MOV format parser
-
-    <section id="demo">
-      <h2>Demo</h2>
-      <div id="selector">
-        Select a mp4, m4a or mov file<br /><br />
-        <input type="file" onchange="handleFile(this.files);" /><br /><br />
+    <header class="fullscreen" id="title">
+      <div class="scrolldown">Scroll down<br><i class="fa fa-angle-down"></i></div>
+      <div class="vcenter">
+        <h1>mp4analyzer.js</h1>
+        <h2>JavaScript MP4/M4A/MOV format parser</h2>
+        <nav>
+          <a class="btn" href="#demo"><i class="fa fa-puzzle-piece"></i>&nbsp;&nbsp;Demo</a>
+          <a class="btn" href="#docs"><i class="fa fa-file-o"></i>&nbsp;&nbsp;Docs</a>
+          <a class="btn" href="#download"><i class="fa fa-download"></i>&nbsp;&nbsp;Download</a>
+        </nav>
       </div>
-      <div id="info">
-        <b>Name:</b> <span id="name"></span><br />
-        <b>Type:</b> <span id="type"></span><br />
-        <b>Size:</b> <span id="size"></span><br />
-        <b>Video codec:</b> <span id="vcodec"></span><br />
-        <b>Audio codec:</b> <span id="acodec"></span><br />
-      </div>
-    </section>
+    </header>
 
-    <section id="download">
-      <h2>Download</h2>
-      <ul>
-        <li><a href="js/mp4analyzer.js">mp4analyzer.js (uncompressed, 17.3 KB)</a></li>
-        <li><a href="js/mp4analyzer.min.js">mp4analyzer.min.js (minified, 7.6 KB)</a></li>
-        <li><a href="js/mp4analyzer.opt.js">mp4analyzer.opt.js (minified and optimized, 4.5 KB)</a></li>
-        <li><a href="https://github.com/fbbdev/mp4analyzer.js/archive/master.zip">Source code from GitHub</a></li>
-      </ul>
-    </section>
+    <article class="fullscreen" id="demo">
+      <div class="scrolldown">Documentation<br><i class="fa fa-angle-down"></i></div>
+      <section class="vcenter">
+        <h1>Demo</h1>
+        <div class="error">Sorry, you need JavaScript to view the demo</div>
+        <script id="demo-html" type="text/html">
+          <h2>Not so much code, indeed</h2>
+          <div class="demo-content">
+            <div class="demo-block box code" id="demo-code"><span style="color: #ddd; font-style: italic;">&lt;!DOCTYPE html&gt;</span>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src=<span style="color: #cc8;">&quot;mp4analyzer.js&quot;</span>&gt;&lt;/script&gt;
+    &lt;script&gt;
+      <span style="color: #f84; font-weight: bold;">if</span> (<span style="font-weight: bold;">!</span>MP4.supported) {
+        <span style="color: #ddd; font-style: italic;">// mp4analyzer is not supported by this browser</span>
+        <span style="color: #ddd; font-style: italic;">// (FileReader or DataView API not supported)</span>
+      }
+
+      <span style="color: #f84; font-weight: bold;">function</span> handleFile(files) {
+        <span style="color: #f84; font-weight: bold;">if</span> (files && files.<span style="color: #f84;">length</span>)
+          MP4.analyze(files[<span style="color: #cc8;">0</span>], <span style="color: #f84; font-weight: bold;">function</span>(result) {
+            <span style="color: #ddd; font-style: italic;">// do something</span>
+          });
+      }
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;input type=<span style="color: #cc8;">&quot;file&quot;</span> onchange=<span style="color: #cc8;">&quot;handleFile(this.files)&quot;</span>&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</div>
+            <div class="demo-block" id="demo-widget">
+              <a class="btn" href="#" id="btn-movie-selector"><i class="fa fa-folder"></i>&nbsp;&nbsp;Choose movie</a><br>
+              or
+              <div class="dropslot" id="movie-dropper"></div>
+              <input type="file" id="movie-selector">
+              <div class="box" id="info">
+                <b>Name:</b><br>
+                <span id="name"></span><br>
+                <b>Type:</b><br>
+                <span id="type"></span><br>
+                <b>Size:</b><br>
+                <span id="size"></span><br>
+                <b>Video codec:</b><br>
+                <span id="vcodec"></span><br>
+                <b>Audio codec:</b><br>
+                <span id="acodec"></span><br>
+              </div>
+            </div>
+          </div>
+        </script>
+      </section>
+    </article>
+
+    <article class="fullscreen" id="docs">
+      <div class="scrolldown">Download<br><i class="fa fa-angle-down"></i></div>
+      <section class="vcenter">
+        <h1>Documentation</h1>
+        <h2>Ooops - not yet written</h2>
+      </section>
+    </article>
+
+    <article class="fullscreen" id="download">
+      <section class="vcenter">
+        <h1>Download</h1>
+        <div>
+          <a class="btn" href="https://github.com/fbbdev/mp4analyzer.js/releases/download/v0.1/mp4analyzer.min.js">
+            mp4analyzer.min.js<br>
+            <span>(minified, 7.6 KB)</span>
+          </a>
+          <a class="btn" href="https://github.com/fbbdev/mp4analyzer.js/releases/download/v0.1/mp4analyzer.opt.js">
+            mp4analyzer.opt.js<br>
+            <span>(minified and optimized, 4.5 KB)</span>
+          </a><br>
+          <a class="btn" href="https://github.com/fbbdev/mp4analyzer.js/releases/download/v0.1/mp4analyzer.js">
+            mp4analyzer.js<br>
+            <span>(plain javascript, 17.3 KB)</span>
+          </a>
+          <a class="btn" href="https://github.com/fbbdev/mp4analyzer.js/archive/master.zip">
+            master.zip<br>
+            <span>Source code from GitHub</span>
+          </a>
+        </div><br>
+        <a class="btn" href="https://github.com/fbbdev/mp4analyzer.js"><i class="fa fa-github"></i>&nbsp;&nbsp;GitHub repository</a>
+      </section>
+    </article>
   </body>
 </html>

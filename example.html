@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="mp4analyzer.js"></script>
+    <script>
+      if (!MP4.supported) {
+        // mp4analyzer is not supported by this browser
+        // (FileReader or DataView API not supported)
+      }
+
+      function handleFile(files) {
+        if (files[0])
+          MP4.analyze(files[0], function(result) {
+            // do something
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <input type="file" onchange="handleFile(this.files)">
+  </body>
+</html>

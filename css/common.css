@@ -1,0 +1,108 @@
+@import url(http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css);
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11pt;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  margin: 0;
+}
+
+h1 {
+  font-weight: 100;
+  font-size: 50pt;
+}
+
+h2 {
+  font-size: 20pt;
+}
+
+/* Error message */
+.error {
+  display: inline-block;
+  padding: 15px;
+
+  font-size: 12pt;
+  text-shadow: 0 1px #ff8e8e;
+  color: #600;
+
+  background: #e25a5a;
+  border-radius: 5px;
+}
+
+/* Button widget */
+
+a.btn {
+  outline: 0;
+}
+
+a.btn:link, a.btn:visited {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  min-width: 150px;
+
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 16pt;
+  text-align: center;
+
+  color: inherit;
+  text-decoration: none;
+
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+a.btn:hover, a.btn:active {
+  background-color: rgba(0,0,0,0.3);
+}
+
+a.btn:focus {
+  box-shadow: 0 0 0 5px rgba(0,0,0,.3);
+}
+
+/* Framed box */
+
+.box {
+  padding: 10px;
+
+  background: rgba(0,0,0,.3) url(../img/noise.png) repeat;
+  border-radius: 5px;
+  box-shadow: inset 0 0 5px 0 rgba(0,0,0,.3);
+}
+
+.box.code {
+  white-space: pre;
+  font-family: monospace;
+  font-size: 10pt;
+}
+
+/* Drop slot widget */
+
+.dropslot {
+  margin: 10px;
+  padding: 10px;
+
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 16pt;
+  text-align: center;
+
+  color: inherit;
+
+  border: 1px dashed;
+  border-radius: 5px;
+}
+
+.dropslot:before {
+  content: "Drop file here";
+}
+
+.dropslot.active {
+  background-color: rgba(0,0,0,.3);
+}

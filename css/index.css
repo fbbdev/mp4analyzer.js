@@ -1,0 +1,132 @@
+/* Sections */
+
+.fullscreen {
+  color: #fff;
+  box-shadow: inset 0 8px 8px -8px rgba(0,0,0,.5);
+}
+
+.fullscreen section {
+  padding: 30px;
+}
+
+#title {
+  background: #6f4186 url(../img/film.svg) left top no-repeat fixed;
+}
+
+#demo {
+  background-color: #649a69;
+  background-image: url(../img/gear.tr.svg), url(../img/gear.bl.svg);
+  background-position: left bottom, right top;
+  background-attachment: fixed, fixed;
+  background-repeat: no-repeat, no-repeat;
+}
+
+#docs {
+  background: #e0e0e0 url(../img/noise.png) repeat fixed;
+  color: #000;
+}
+
+#download {
+  background-color: #494186;
+  background-image: url(../img/cloud.svg), url(../img/parachute.svg);
+  background-position: left top, right bottom;
+  background-attachment: fixed, fixed;
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* "Scroll down" widget */
+
+.scrolldown {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  margin-bottom: 15px;
+
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 20pt;
+}
+
+@media screen {
+  @-webkit-keyframes sdbounce {
+    0% { margin-bottom: 15px; }
+    100% { margin-bottom: 2px; }
+  }
+
+  @-moz-keyframes sdbounce {
+    0% { margin-bottom: 15px; }
+    100% { margin-bottom: 2px; }
+  }
+
+  @-o-keyframes sdbounce {
+    0% { margin-bottom: 15px; }
+    100% { margin-bottom: 2px; }
+  }
+
+  @keyframes sdbounce {
+    0% { margin-bottom: 15px; }
+    100% { margin-bottom: 2px; }
+  }
+
+  .scrolldown {
+    display: block;
+    -webkit-animation: sdbounce .5s infinite alternate linear;
+    -moz-animation: sdbounce .5s infinite alternate linear;
+    -o-animation: sdbounce .5s infinite alternate linear;
+    animation: sdbounce .5s infinite alternate linear;
+  }
+}
+
+/* Demo widgets */
+
+#demo .demo-content {
+  display: inline-block;
+  margin: 10px auto 0;
+}
+
+#demo .demo-block {
+  float: left;
+  margin-right: 40px;
+}
+
+#demo .demo-block:last-child {
+  margin-right: 0;
+}
+
+#demo .box {
+  text-align: left;
+}
+
+#demo-widget #movie-selector {
+  position: fixed;
+  left: -20px;
+  width: 0;
+  height: 0;
+}
+
+#demo-widget #info {
+  margin-top: 15px;
+}
+
+#demo-code {
+  width: 460px;
+  overflow: auto;
+}
+
+/* Download widgets */
+
+#download div .btn {
+  width: 220px;
+  text-align: left;
+}
+
+#download div .btn span {
+  font-size: 70%;
+}
+
+#download-clone-url {
+  display: inline-block;
+}
