@@ -22,12 +22,6 @@ body {
   overflow: hidden;
 }
 
-.fullscreen:empty {
-  background: transparent;
-  border: none;
-  z-index: -21;
-}
-
 .vcenter {
   display: table-cell;
   width: 100%;
