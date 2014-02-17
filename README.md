@@ -93,8 +93,7 @@ To analyze a file you only need to call ```MP4.analyze```. The first argument
 must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or
 [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object.
 A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)
-exception is thrown when ```blob``` does not inherit the ```Blob``` object
-and when ```blob.type``` is not 'video/mp4', 'audio/mp4' or 'video/quicktime'.
+exception is thrown when ```blob``` does not inherit the ```Blob``` object.
 The second argument is a completion callback. The analysis process is
 asynchronous to avoid blocking the browser while waiting for disk I/O.
 The argument passed to the callback is the result object.
@@ -106,6 +105,7 @@ The argument passed to the callback is the result object.
 
 ```js
 {
+  error: Error('error message'), // null if no error occurred
   video: { // null if no video stream found
     codec: 'codec name'
   },
@@ -119,6 +119,9 @@ This is the structure of the result object passed to the callback.
 As stated above, the analyzer currently extracts only the codec name
 for the first video and audio streams. If no video or audio stream is found,
 the concerning field in the result object is set to ```null```.
+If an error occured, the ```error``` property contains an
+[Error](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+object.
 
 ```result.video.codec``` contains a FOURCC code. You can find a FOURCC list
 [there](http://www.fourcc.org/codecs.php).
