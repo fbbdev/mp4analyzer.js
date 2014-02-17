@@ -15,6 +15,7 @@
         if (file.rewind) file.rewind();
         else if (file.g) file.g = 0;
         $('#info span').text('');
+        $('#error').text('No error');
         if (!file) return;
         $('#name').text(file.name);
         $('#type').text(file.type);
@@ -23,6 +24,7 @@
         MP4.analyze(file, function(info) {
           if (info.video) $('#vcodec').text(info.video.codec);
           if (info.audio) $('#acodec').text(info.audio.codec);
+          if (info.error) $('#error').text(info.error.message);
         });
       }
 
@@ -120,6 +122,8 @@
                 <span id="vcodec"></span><br>
                 <b>Audio codec:</b><br>
                 <span id="acodec"></span><br>
+                <b>Error:</b><br>
+                <span id="error">No error</span><br>
               </div>
             </div>
           </div>

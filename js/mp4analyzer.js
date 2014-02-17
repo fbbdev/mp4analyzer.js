@@ -137,6 +137,8 @@ MP4.Context = function() {
   /** @type {?MP4.Track} */
   this.currentTrack = null;
 
+  /** @type {?Error} */
+  this.error = null;
   /** @type {?MP4.Track} */
   this.video = null;
   /** @type {?MP4.Track} */
@@ -147,7 +149,11 @@ MP4.Context = function() {
    * @return Object.<string, *>
    */
   this.result = function() {
+    if (!this.video && !this.audio && !this.error)
+      this.error = new Error("Cannot find codec information");
+
     return {
+      'error': this.error,
       'video': this.video && {
         'codec': this.video.codec
       },
@@ -287,6 +293,7 @@ MP4.Atoms.visitChildren = function(parent, blob, context, callback, reader) {
     reader.onloadend = function(ev) {
       if (ev.target.readyState === FileReader.DONE) {
         if (ev.target.result.byteLength < MP4.Atoms.Atom.HeaderSize) {
+          context.error = new Error("Input data is corrupted or not encoded as mp4/mov");
           callback(context);
           return;
         }
@@ -295,6 +302,7 @@ MP4.Atoms.visitChildren = function(parent, blob, context, callback, reader) {
 
         var atom = new MP4.Atoms.Atom(data, 0);
         if (atom.size < atom.headerSize) {
+          context.error = new Error("Input data is corrupted or not encoded as mp4/mov");
           callback(context);
           return;
         }
@@ -333,16 +341,22 @@ MP4.Atoms.visitor = function(atom, blob, context, callback) {
     if (!atom.parsed) {
       if (MP4.Atoms.Map[atom.type].parser) {
         var reader = new FileReader();
+        var parsedSize = MP4.Atoms.Map[atom.type].parsedSize == -1 ? atom.size : MP4.Atoms.Map[atom.type].parsedSize;
 
         reader.onloadend = function(ev) {
           if (ev.target.readyState === FileReader.DONE) {
+            if (ev.target.result.byteLength < parsedSize) {
+              context.error = new Error("Input data is corrupted or not encoded as mp4/mov");
+              callback(context);
+              return;
+            }
+
             var data = new DataView(ev.target.result);
             atom = MP4.Atoms.Map[atom.type].parser(context, data, 0);
             MP4.Atoms.visitChildren(atom, blob, context, callback, reader);
           }
         };
 
-        var parsedSize = MP4.Atoms.Map[atom.type].parsedSize == -1 ? atom.size : MP4.Atoms.Map[atom.type].parsedSize;
         reader.readAsArrayBuffer(blob.poll(parsedSize));
       } else {
         atom.dataSize = MP4.Atoms.Map[atom.type].parsedSize-atom.headerSize;
@@ -535,9 +549,6 @@ MP4.Atoms.Map['esds'] = {
 };
 MP4.analyze = function(blob, callback) {
   if (!(blob instanceof Blob)) throw new TypeError("Invalid argument type");
-  if (blob.type != "video/mp4" && blob.type != "video/quicktime" && blob.type != "audio/mp4") {
-    throw new TypeError("Input data format is not mp4/mov");
-  }
 
   var ab = new ArrayBuffer(8);
   var dv = new DataView(ab);
@@ -548,9 +559,25 @@ MP4.analyze = function(blob, callback) {
   atom.dataSize = -8;
   atom.parsed = true;
 
-  MP4.Atoms.visitChildren(atom, blob, new MP4.Context(), function(context) {
-    callback(context.result());
-  });
+  var reader = new FileReader();
+  reader.onloadend = function(ev) {
+    if (ev.target.readyState === FileReader.DONE) {
+      if (ev.target.result != "ftyp") {
+        var context = new MP4.Context();
+        context.error = new Error("Input data format is not mp4/mov");
+        callback(context.result());
+        return;
+      }
+  
+      blob.rewind();
+      MP4.Atoms.visitChildren(atom, blob, new MP4.Context(), function(context) {
+        callback(context.result());
+      }, reader);
+    }
+  };
+
+  blob.skip(4);
+  reader.readAsText(blob.poll(4));
 
   return true;
 }
