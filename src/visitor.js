@@ -16,6 +16,7 @@ MP4.Atoms.visitChildren = function(parent, blob, context, callback, reader) {
     reader.onloadend = function(ev) {
       if (ev.target.readyState === FileReader.DONE) {
         if (ev.target.result.byteLength < MP4.Atoms.Atom.HeaderSize) {
+          context.error = new Error("Input data is corrupted or not encoded as mp4/mov");
           callback(context);
           return;
         }
@@ -24,6 +25,7 @@ MP4.Atoms.visitChildren = function(parent, blob, context, callback, reader) {
 
         var atom = new MP4.Atoms.Atom(data, 0);
         if (atom.size < atom.headerSize) {
+          context.error = new Error("Input data is corrupted or not encoded as mp4/mov");
           callback(context);
           return;
         }
@@ -62,16 +64,22 @@ MP4.Atoms.visitor = function(atom, blob, context, callback) {
     if (!atom.parsed) {
       if (MP4.Atoms.Map[atom.type].parser) {
         var reader = new FileReader();
+        var parsedSize = MP4.Atoms.Map[atom.type].parsedSize == -1 ? atom.size : MP4.Atoms.Map[atom.type].parsedSize;
 
         reader.onloadend = function(ev) {
           if (ev.target.readyState === FileReader.DONE) {
+            if (ev.target.result.byteLength < parsedSize) {
+              context.error = new Error("Input data is corrupted or not encoded as mp4/mov");
+              callback(context);
+              return;
+            }
+
             var data = new DataView(ev.target.result);
             atom = MP4.Atoms.Map[atom.type].parser(context, data, 0);
             MP4.Atoms.visitChildren(atom, blob, context, callback, reader);
           }
         };
 
-        var parsedSize = MP4.Atoms.Map[atom.type].parsedSize == -1 ? atom.size : MP4.Atoms.Map[atom.type].parsedSize;
         reader.readAsArrayBuffer(blob.poll(parsedSize));
       } else {
         atom.dataSize = MP4.Atoms.Map[atom.type].parsedSize-atom.headerSize;

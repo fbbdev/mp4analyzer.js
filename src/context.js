@@ -26,6 +26,8 @@ MP4.Context = function() {
   /** @type {?MP4.Track} */
   this.currentTrack = null;
 
+  /** @type {?Error} */
+  this.error = null;
   /** @type {?MP4.Track} */
   this.video = null;
   /** @type {?MP4.Track} */
@@ -36,7 +38,11 @@ MP4.Context = function() {
    * @return Object.<string, *>
    */
   this.result = function() {
+    if (!this.video && !this.audio && !this.error)
+      this.error = new Error("Cannot find codec information");
+
     return {
+      'error': this.error,
       'video': this.video && {
         'codec': this.video.codec
       },
