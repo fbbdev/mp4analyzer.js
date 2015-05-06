@@ -15,7 +15,7 @@ Building
 
 mp4analyzer.js has been designed to be minified and optimized with
 [Google Closure Compiler](https://developers.google.com/closure/compiler/).
-The included makefile helps in the building process. It contains four targets:
+The included makefile helps in the building process. Four targets are available:
 
 * __wrap__: wrap the library in a single uncompressed file (output: build/mp4analyzer.js)
 * __minify__: minify the library with Closure compiler (output: build/mp4analyzer.min.js)
@@ -89,7 +89,7 @@ MP4.analyze = function(  // return type: boolean
 );
 ```
 
-To analyze a file you only need to call ```MP4.analyze```. The first argument
+To analyze a file call ```MP4.analyze```. The first argument
 must be a HTML5 [File](http://developer.mozilla.org/en-US/docs/Web/API/File) or
 [Blob](http://developer.mozilla.org/en-US/docs/Web/API/Blob) object.
 A [TypeError](http://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)
@@ -124,7 +124,7 @@ If an error occured, the ```error``` property contains an
 object.
 
 ```result.video.codec``` contains a FOURCC code. You can find a FOURCC list
-[there](http://www.fourcc.org/codecs.php).
+[here](http://www.fourcc.org/codecs.php).
 ```result.audio.codec``` contains one of these strings:
 
 * '.mp3': MPEG-1 Layer 3 (MP3)
