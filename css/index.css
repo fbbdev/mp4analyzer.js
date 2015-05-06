@@ -15,7 +15,7 @@
 
 #demo {
   background-color: #649a69;
-  background-image: url(../img/gear.tr.svg), url(../img/gear.bl.svg);
+  background-image: url(../img/gear.bl.svg), url(../img/gear.tr.svg);
   background-position: left bottom, right top;
   background-attachment: fixed, fixed;
   background-repeat: no-repeat, no-repeat;
