@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="js/mp4analyzer.js"></script>
+    <script>
+      if (!MP4.supported) {
+        // mp4analyzer is not supported by this browser
+        // (FileReader or DataView API not supported)
+        document.body.innerHTML = "Not supported";
+      }
+
+      function handleFile(files) {
+        if (files[0])
+          MP4.analyze(files[0], function(result) {
+            if (result.error) {
+              document.querySelector('#result').innerHTML = "Error: " + result.error.message;
+            } else {
+              document.querySelector('#result').innerHTML = "OK";
+            }
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <input type="file" onchange="handleFile(this.files)">
+    <div id="result"></div>
+  </body>
+</html>
