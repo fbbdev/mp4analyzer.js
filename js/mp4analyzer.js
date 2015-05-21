@@ -9,11 +9,14 @@ var MP4 = {
  * @param {Object} object
  * @private
  */
-function proxyWebkitMethods(object) {
+function proxyWebkitProperties(object) {
   var isWebkit = /^webkit/;
-  Object.getOwnPropertyNames(object.prototype).forEach(function(method) {
-    if (isWebkit.test(method)) {
-      object.prototype[method[6].toLowerCase()+method.slice(7)] = object.prototype[method];
+  Object.getOwnPropertyNames(object.prototype).forEach(function(property) {
+    if (isWebkit.test(property)) {
+      Object.defineProperty(object.prototype, property[6].toLowerCase() + property.slice(7), {
+        get: function() { return this[property]; },
+        set: function(value) { this[property] = value; }
+      });
     }
   });
 }
@@ -28,9 +31,9 @@ function checkFileAPI() {
   window['FileReader'] = window['FileReader'] || window['webkitFileReader'] || undefined;
 
   if (Blob && File && FileReader) {
-    proxyWebkitMethods(window['Blob']);
-    proxyWebkitMethods(window['File']);
-    proxyWebkitMethods(window['FileReader']);
+    proxyWebkitProperties(window['Blob']);
+    proxyWebkitProperties(window['File']);
+    proxyWebkitProperties(window['FileReader']);
 
     return true;
   } else {
@@ -46,7 +49,7 @@ function checkDataViewAPI() {
   window['DataView'] = window['DataView'] || window['webkitDataView'] || undefined;
 
   if (DataView) {
-    proxyWebkitMethods(window['DataView']);
+    proxyWebkitProperties(window['DataView']);
 
     return true;
   } else {
